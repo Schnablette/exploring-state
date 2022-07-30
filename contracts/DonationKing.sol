@@ -10,7 +10,7 @@ contract DonationKing {
         king = _king;
     }
 
-    function donate() public {}
+    function donate() public payable {}
 
     function distribute() public {
         king.transfer(address(this).balance);

@@ -7,12 +7,39 @@
 const hre = require("hardhat");
 
 async function main() {
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  const addresses = ([
+    deployer,
+    addr1,
+    addr2,
+    addr3,
+    addr4,
+    addr5,
+    addr6,
+    addr7,
+    addr8,
+    addr9,
+    addr10,
+  ] = await hre.ethers.getSigners());
 
-  await lock.deployed();
+  const MAA = await hre.ethers.getContractFactory("MappingsAndArrays");
+  const maa = await MAA.deploy();
 
-  console.log("Lock with 1 ETH deployed to:", lock.address);
+  await maa.deployed();
+
+  console.log("MappingsAndArrays deployed to: ", maa.address);
+
+  for (i = 0; i < 11; i++) {
+    if (i != 0) {
+      await maa.connect(addresses[i]).storeInArray(i);
+      await maa.connect(addresses[i]).storeInMapping(i);
+    }
+  }
+
+  maa.storeInArray(1524);
+  maa.storeInMapping(1524);
+
+  maa.updateArray(24);
+  maa.updateMapping(24);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
